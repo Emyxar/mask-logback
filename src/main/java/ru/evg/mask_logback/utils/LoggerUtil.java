@@ -8,9 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
-import ru.evg.mask_logback.maskUtil.finder.MaskingField;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 public class LoggerUtil {

@@ -1,13 +1,9 @@
 package ru.evg.mask_logback.maskUtil;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +32,6 @@ public class MaskProcessor {
             JsonNode rootNode = objectMapper.readTree(jsonObject);
             maskRecursive(rootNode, annotationFields);
 
-            // Возвращаем красиво отформатированный JSON
             return Optional.ofNullable(new GsonBuilder().serializeNulls().setPrettyPrinting().create()
                     .toJson(JsonParser.parseString(rootNode.toString()))).orElse("Пусто");
 
@@ -65,7 +60,6 @@ public class MaskProcessor {
                         objectNode.put(fieldName, "****");
                     }
                 } else {
-                    // Рекурсивно обходим вложенные поля
                     maskRecursive(fieldValue, annotationFields);
                 }
             }
@@ -82,9 +76,9 @@ public class MaskProcessor {
         if (object == null) return annotationFields;
 
         int identity = System.identityHashCode(object);
-        if (visited.contains(identity)) return annotationFields; // УЖЕ БЫЛ В СЕТЕ
+        if (visited.contains(identity)) return annotationFields;
 
-        visited.add(identity); // ДОБАВИЛИ
+        visited.add(identity);
 
         Class<?> clazz = object.getClass();
         if (clazz.getName().startsWith("java.") || clazz.isPrimitive()) {
