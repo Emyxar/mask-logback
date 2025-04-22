@@ -60,8 +60,13 @@ public class MaskProcessor {
 
                 if (matchingField != null) {
                     log.info("Значение: {}", fieldValue);
-                    objectNode.put(fieldName, "*".repeat(fieldValue.asText().length()));
+                    if (fieldValue.isNull()){
+                        objectNode.put(fieldName, "null");
+                    } else {
+                        objectNode.put(fieldName, "*".repeat(fieldValue.asText().length()));
+                    }
                 }
+
                 if (fieldValue.isObject() || fieldValue.isArray()) {
                     maskingJson(fieldValue, fields);
                 }

@@ -77,7 +77,7 @@ public class MaskingProcessTest extends SpringBootContextLoader {
         Employee employee = new Employee().id(UUID.randomUUID());
         Passport passport = new Passport();
 
-        passport.series(BigDecimal.valueOf(1234));
+        passport.series(null);
         passport.number(BigDecimal.valueOf(987654321));
         passport.birthDate(LocalDate.now());
         passport.sex(Sex.MALE);
