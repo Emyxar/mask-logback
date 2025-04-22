@@ -39,13 +39,13 @@ public class MaskingProcessTest extends SpringBootContextLoader {
     @Test
     void test(){
         Response response = mockResponse(List.of(mockFirstEmployee()));
-        assertThatCode(() -> maskProcessor.maskFields(response)).doesNotThrowAnyException();
+        assertThatCode(() -> maskProcessor.mask(response)).doesNotThrowAnyException();
     }
 
     @Test
     void test2(){
         Response response = mockResponse(List.of(mockFirstEmployee(), mockSecondEmployee(), mockThirdEmployee()));
-        assertThatCode(() -> maskProcessor.maskFields(response)).doesNotThrowAnyException();
+        assertThatCode(() -> maskProcessor.mask(response)).doesNotThrowAnyException();
     }
 
     @Test
@@ -61,6 +61,12 @@ public class MaskingProcessTest extends SpringBootContextLoader {
         String login = employee.getLogin() != null ? employee.getLogin() : "";
 
         assertThat(maskedJson).contains("*".repeat(login.length()));
+    }
+
+    @Test
+    void test4(){
+        Response response = mockResponse(List.of(mockFirstEmployee(), mockSecondEmployee(), mockThirdEmployee()));
+        System.out.println(maskProcessor.mask(response));
     }
 
     private Response mockResponse(List<Employee> employees){
