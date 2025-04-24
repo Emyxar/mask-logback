@@ -1,6 +1,0 @@
-"SSN"\s*:\s*"(.*?)"  # SSN JSON pattern
-"address"\s*:\s*"(.*?)"  # Address JSON pattern
-(\d+\.\d+\.\d+\.\d+)  # IP address IPv4 pattern
-([\w.-]+@[\w.-]+\.\w+)  # Email pattern
-"post"\s*:\s*"(.*)?"
-"series"\s*:\s*"(.*).."

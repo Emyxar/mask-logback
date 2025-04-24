@@ -1,15 +1,9 @@
-package ru.evg.mask_logback.controllers;
+package ru.evg.mask_logback;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.evg.mask_logback.maskUtil.MaskProcessor;
 import ru.evg.mask_logback.model.Employee;
 import ru.evg.mask_logback.model.Passport;
 import ru.evg.mask_logback.model.Response;
 import ru.evg.mask_logback.model.Sex;
-import ru.evg.mask_logback.utils.JsonUtilWrapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,25 +11,13 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Slf4j
-@RestController
-@RequiredArgsConstructor
-public class Controller {
+public class MockData {
 
-    private final JsonUtilWrapper jsonUtilWrapper;
-    private final MaskProcessor mask;
-
-    @GetMapping("/test")
-    public Response test(){
-        Response response = mockResponse(List.of(mockFirstEmployee(), mockSecondEmployee(), mockThirdEmployee()));
-        log.info("Ответ: {}", jsonUtilWrapper.toJson(response));
-        return response;
-    }
-    private Response mockResponse(List<Employee> employees){
+    public Response mockResponse(List<Employee> employees){
         return new Response().id(UUID.randomUUID()).employee(employees);
     }
 
-    private Employee mockFirstEmployee(){
+    public Employee mockFirstEmployee(){
         Employee employee = new Employee().id(UUID.randomUUID());
         Passport passport = new Passport();
 
@@ -52,7 +34,7 @@ public class Controller {
         return employee;
     }
 
-    private Employee mockSecondEmployee(){
+    public Employee mockSecondEmployee(){
         Employee employee = new Employee().id(UUID.randomUUID());
         Passport passport = new Passport();
 
@@ -69,7 +51,7 @@ public class Controller {
         return employee;
     }
 
-    private Employee mockThirdEmployee(){
+    public Employee mockThirdEmployee(){
         Employee employee = new Employee().id(UUID.randomUUID());
         Passport passport = new Passport();
 

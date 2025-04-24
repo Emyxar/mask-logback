@@ -14,7 +14,6 @@ components:
       properties:
         id:
           type: UUID
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
         employee:
           type: array
           items:
@@ -24,9 +23,10 @@ components:
       properties:
         id:
           type: UUID
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
         login:
           type: string
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
         lastActive:
           type: string
           format: date-time
@@ -37,14 +37,14 @@ components:
       properties:
         series:
           type: number
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
         number:
           type: number
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
         birthDate:
           type: string
           format: date
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
         sex:
           $ref: '#/components/schemas/Sex'
         placeOfIssue:
@@ -54,4 +54,4 @@ components:
       enum:
         - MALE
         - FEMALE
-      x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+      x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"

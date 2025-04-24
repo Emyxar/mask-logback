@@ -1,4 +1,4 @@
-package ru.evg.mask_logback.maskUtil.finder;
+package ru.evg.mask_logback.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

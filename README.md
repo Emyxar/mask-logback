@@ -8,19 +8,19 @@ components:
       properties:
         name:
           type: string
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
         login:
           type: string
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
         post:
           type: string
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
         series:
           type: string
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
         number:
           type: string
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
     Order:
       type: object
       properties:
@@ -32,7 +32,7 @@ components:
           type: string
         type:
           type: string
-          x-field-extra-annotation: "@ru.evg.mask_logback.maskUtil.finder.MaskingField"
+          x-field-extra-annotation: "@ru.evg.mask_logback.annotations.MaskingField"
         user:
           items:
             $ref: "#/components/schemas/User"
