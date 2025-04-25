@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.stereotype.Component;
-import ru.evg.mask_logback.maskUtil.finder.MaskingField;
+import ru.evg.mask_logback.annotations.MaskingField;
 
 import java.lang.reflect.Field;
 import java.net.URI;
@@ -34,7 +34,7 @@ public class MaskProcessor {
 
         try {
             JsonNode rootNode = new ObjectMapper().readTree(jsonObject);
-            maskingJson(rootNode, annotatedFields);
+            maskingJson(rootNode, object, annotatedFields);
 
             return Optional.ofNullable(new GsonBuilder().serializeNulls().setPrettyPrinting().create()
                     .toJson(JsonParser.parseString(rootNode.toString()))).orElse("Пусто");
@@ -43,7 +43,7 @@ public class MaskProcessor {
         }
     }
 
-    private void maskingJson(JsonNode node, Set<Field> fields) {
+    private void maskingJson(JsonNode node, Object currentObject, Set<Field> fields) {
         if (node.isObject()) {
             ObjectNode objectNode = (ObjectNode) node;
             Iterator<Map.Entry<String, JsonNode>> fieldsIterator = objectNode.fields();
@@ -53,27 +53,34 @@ public class MaskProcessor {
                 String fieldName = entry.getKey();
                 JsonNode fieldValue = entry.getValue();
 
-                Field matchingField = fields.stream()
-                        .filter(f -> f.getName().equals(fieldName))
-                        .findFirst()
-                        .orElse(null);
+                try {
+                    Field field = currentObject.getClass().getDeclaredField(fieldName);
+                    field.setAccessible(true);
 
-                if (matchingField != null) {
-                    log.info("Значение: {}", fieldValue);
-                    if (fieldValue.isNull()){
-                        objectNode.put(fieldName, "null");
-                    } else {
-                        objectNode.put(fieldName, "*".repeat(fieldValue.asText().length()));
+                    if (fields.contains(field)){
+                        if (fieldValue.isNull()){
+                            objectNode.put(fieldName, "null");
+                        } else {
+                            objectNode.put(fieldName, "*".repeat(fieldValue.asText().length()));
+                        }
                     }
-                }
 
-                if (fieldValue.isObject() || fieldValue.isArray()) {
-                    maskingJson(fieldValue, fields);
+                    Object nestedObject = field.get(currentObject);
+                    if (nestedObject != null && (fieldValue.isObject() || fieldValue.isArray())) {
+                        maskingJson(fieldValue, nestedObject, fields);
+                    }
+
+                } catch (NoSuchFieldException | IllegalAccessException e){
+                    continue;
                 }
             }
         } else if (node.isArray()) {
-            for (JsonNode arrayItem : node) {
-                maskingJson(arrayItem, fields);
+            if (currentObject instanceof Collection<?>) {
+                Iterator<JsonNode> elements = node.elements();
+                Iterator<?> objs = ((Collection<?>) currentObject).iterator();
+                while (elements.hasNext() && objs.hasNext()) {
+                    maskingJson(elements.next(), objs.next(), fields);
+                }
             }
         }
     }

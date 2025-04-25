@@ -3,6 +3,7 @@ package ru.evg.mask_logback;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.evg.mask_logback.maskUtil.MaskProcessor;
 import ru.evg.mask_logback.model.Response;
 
 import java.util.List;
