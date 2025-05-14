@@ -8,9 +8,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+@Component
 public class LoggerUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper()

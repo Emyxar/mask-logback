@@ -54,24 +54,28 @@ public class MaskProcessor {
                 JsonNode fieldValue = entry.getValue();
 
                 try {
-                    Field field = currentObject.getClass().getDeclaredField(fieldName);
-                    field.setAccessible(true);
-
-                    if (fields.contains(field)){
-                        if (fieldValue.isNull()){
-                            objectNode.put(fieldName, "null");
-                        } else {
-                            objectNode.put(fieldName, "*".repeat(fieldValue.asText().length()));
+                    Field field = FieldUtils.getField(currentObject.getClass(), fieldName, true);
+                    if (field != null){
+                        if (fields.contains(field)){
+                            Class<?> fieldType = field.getType();
+                            if (Map.class.isAssignableFrom(fieldType) || Collection.class.isAssignableFrom(fieldType)){
+                                objectNode.put(fieldName, "[******]");
+                            } else if (fieldValue.isNull()) {
+                                objectNode.put(fieldName, "null");
+                            } else {
+                                objectNode.put(fieldName, "*".repeat(fieldValue.asText().length()));
+                            }
                         }
-                    }
 
-                    Object nestedObject = field.get(currentObject);
-                    if (nestedObject != null && (fieldValue.isObject() || fieldValue.isArray())) {
-                        maskingJson(fieldValue, nestedObject, fields);
+                        Object nestedObject = field.get(currentObject);
+                        if (nestedObject != null && (fieldValue.isObject() || fieldValue.isArray())) {
+                            maskingJson(fieldValue, nestedObject, fields);
+                        }
+                    } else {
+                        log.info("Поле {} не найдено в объекте {}", fieldName, currentObject.getClass());
                     }
-
-                } catch (NoSuchFieldException | IllegalAccessException e){
-                    continue;
+                } catch (IllegalAccessException e){
+                    throw new RuntimeException(e);
                 }
             }
         } else if (node.isArray()) {
@@ -93,7 +97,7 @@ public class MaskProcessor {
         for(Field field : FieldUtils.getAllFieldsList(clazz)) {
             try {
                 field.setAccessible(true);
-                if(isPrimitiveAndOtherType(field.get(object)) && field.isAnnotationPresent(MaskingField.class)) {
+                if(field.isAnnotationPresent(MaskingField.class)) {
                     fields.add(field);
                 } else if (field.get(object) != null){
                     if (field.get(object) instanceof Collection<?> collection) {
@@ -115,6 +119,7 @@ public class MaskProcessor {
 
     private boolean isPrimitiveAndOtherType(Object object){
         return object == null ||
+                object instanceof Class ||
                 ClassUtils.isPrimitiveOrWrapper(object.getClass()) ||
                 object instanceof String ||
                 object instanceof Number ||

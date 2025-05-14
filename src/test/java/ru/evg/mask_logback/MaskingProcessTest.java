@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import ru.evg.mask_logback.maskUtil.MaskProcessor;
 import ru.evg.mask_logback.model.Response;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static ru.evg.mask_logback.utils.LoggerUtil.toJson;
@@ -40,6 +42,30 @@ public class MaskingProcessTest {
     void test3(){
         Response response = mockData.mockResponse(List.of(mockData.mockFirstEmployee(), mockData.mockSecondEmployee(), mockData.mockThirdEmployee()));
         logs(response);
+        assertThatCode(() -> maskProcessor.mask(response)).doesNotThrowAnyException();
+    }
+
+    @Test
+    void test4(){
+        EmployeeTestDto employeeTestDto = new EmployeeTestDto();
+        employeeTestDto.setId("test");
+        employeeTestDto.setName("name");
+        employeeTestDto.setData(Map.of("s", "s", "a", "a"));
+
+        String originalJson = toJson(employeeTestDto);
+        String maskedJson = maskProcessor.mask(employeeTestDto);
+
+        log.info("Исходный JSON: {}", originalJson);
+        log.info("Маскированный JSON: {}", maskedJson);
+
+        assertThatCode(() -> maskProcessor.mask(employeeTestDto)).doesNotThrowAnyException();
+    }
+
+
+    @Test
+    void test5(){
+        Response response = mockData.mockResponse(List.of(mockData.mockFirstEmployee(), mockData.mockSecondEmployee(), mockData.mockThirdEmployee()));
+        log.info("Данные {}", toJson(response));
         assertThatCode(() -> maskProcessor.mask(response)).doesNotThrowAnyException();
     }
 
